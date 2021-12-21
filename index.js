@@ -91,6 +91,10 @@ export default () => {
       // console.log('use frame', timestamp, timeDiff);
     };
   })();
+
+  const physicsMaterial = new THREE.Vector3(0.5, 0.5, 0);
+  const physicsObject = physics.addCapsuleGeometry(app.position, app.quaternion, 0.3, 0, physicsMaterial);
+  physicsIds.push(physicsObject);
   
   useCleanup(() => {
     for (const physicsId of physicsIds) {
