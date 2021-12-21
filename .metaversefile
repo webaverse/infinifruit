@@ -1,0 +1,7 @@
+{
+  "name": "infinifruit",
+  "start_url": "index.js",
+  "components": {
+    "activate": true
+  }
+}
