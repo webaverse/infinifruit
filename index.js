@@ -5,6 +5,15 @@ const {useApp, useFrame, useActivate, useLoaders, usePhysics, addTrackedApp, use
 
 const baseUrl = import.meta.url.replace(/(\/)[^\/\\]*$/, '$1');
 
+const fruitFileNames = [
+  'Egg_Fruit_dream.glb',
+  'Lavender_Berry_dream.glb',
+  'Long_Apple_dream.glb',
+  'Red_Shroom_dream.glb',
+  'Slime_Fruit_dream.glb',
+  'Squid_Squash_dream.glb',
+];
+
 export default () => {
   const app = useApp();
   const physics = usePhysics();
@@ -18,34 +27,68 @@ export default () => {
     frameCb && frameCb(timestamp, timeDiff);
   });
 
-  let physicsIds = [];
-  (async () => {
-    const u = `${baseUrl}fruit.glb`;
+  const _loadGlb = async u => {
+    // const u = `${baseUrl}fruit.glb`;
     let o = await new Promise((accept, reject) => {
       const {gltfLoader} = useLoaders();
       gltfLoader.load(u, accept, function onprogress() {}, reject);
     });
-    const {animations} = o;
-    o = o.scene;
-    app.add(o);
-    
-    /* const dropObject = new THREE.Object3D();
-    dropObject.position.y = 0.5;
-    app.add(dropObject); */
+    // window.fruit = o;
+    return o;
+  };
 
-    // app.updateMatrixWorld();
+  let physicsIds = [];
+  (async () => {
+    const os = await Promise.all(fruitFileNames.map(fruitFileName => _loadGlb(`${baseUrl}${fruitFileName}`))
+      .concat([
+        /* (async () => {
+          const u = `${baseUrl}fruit.glb`;
+          let o = await new Promise((accept, reject) => {
+            const {gltfLoader} = useLoaders();
+            gltfLoader.load(u, accept, function onprogress() {}, reject);
+          });
+          window.fruit = o;
+          return o;
+        })(), */
+        _loadGlb(`${baseUrl}plant.glb`),
+        _loadGlb(`${baseUrl}plant2.glb`),
+      ])
+    );
+    const [
+      eggFruit,
+      lavenderBerry,
+      longApple,
+      redShroom,
+      slimeFruit,
+      squidSquash,
+      plant,
+      plant2,
+    ] = os;
+    const fruits = [
+      eggFruit,
+      lavenderBerry,
+      longApple,
+      redShroom,
+      slimeFruit,
+      squidSquash,
+    ];
+    for (const fruit of fruits) {
+      fruit.scene.scale.multiplyScalar(0.2);
+    }
+    plant.scene.scale.multiplyScalar(5);
+    plant2.scene.scale.multiplyScalar(0.02);
+    for (const o of os) {
+      app.add(o.scene);
+    }
+    app.updateMatrixWorld();
 
-    /* let baseMesh = null;
-    o.traverse(o => {
-      if (!baseMesh && o.isMesh && /base_container/i.test(o.name)) {
-        baseMesh = o;
-      }
-    }); */
-    const physicsId = physics.addGeometry(o);
-    physicsIds.push(physicsId);
+    /* for (const fruit of fruits) {
+      const physicsId = physics.addGeometry(o.scene);
+      physicsIds.push(physicsId);
+    } */
     
     frameCb = (timestamp, timeDiff) => {
-      console.log('use frame', timestamp, timeDiff);
+      // console.log('use frame', timestamp, timeDiff);
     };
   })();
   
