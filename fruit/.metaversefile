@@ -1,0 +1,7 @@
+{
+  "name": "fruit",
+  "start_url": "fruit.js",
+  "components": {
+    "activate": true
+  }
+}
