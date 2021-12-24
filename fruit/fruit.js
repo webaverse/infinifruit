@@ -60,7 +60,7 @@ export default () => {
     app.getWorldPosition(localVector);
     localQuaternion.setFromAxisAngle(localVector2.set(0, 0, 1), Math.PI * 0.5);
     // console.log('call', worldPosition, worldQuaternion, 0.3, 0.1, physicsMaterial);
-    const physicsObject = physics.addCapsuleGeometry(localVector, localQuaternion, 0.2, 0, physicsMaterial);
+    const physicsObject = physics.addCapsuleGeometry(localVector, localQuaternion, 0.3, 0, physicsMaterial);
     physicsIds.push(physicsObject);
 
     console.log('fruit physics object', physicsObject.quaternion.toArray());
