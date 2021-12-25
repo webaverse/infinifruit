@@ -9,12 +9,12 @@ const localVector = new THREE.Vector3();
 const localQuaternion = new THREE.Quaternion();
 
 const fruitFileNames = [
-  // 'Egg_Fruit_dream.glb',
-  // 'Lavender_Berry_dream.glb',
+  'Egg_Fruit_dream.glb',
+  'Lavender_Berry_dream.glb',
   'Long_Apple_dream.glb',
-  // 'Red_Shroom_dream.glb',
-  // 'Slime_Fruit_dream.glb',
-  // 'Squid_Squash_dream.glb',
+  'Red_Shroom_dream.glb',
+  'Slime_Fruit_dream.glb',
+  'Squid_Squash_dream.glb',
 ];
 
 export default () => {
@@ -57,7 +57,8 @@ export default () => {
   const subApps = [];
   let physicsIds = [];
   (async () => {
-    const os = await Promise.all(fruitFileNames.map(fruitFileName => _loadFruit(fruitFileName))
+    const emptyFruitFileNames = [];
+    const os = await Promise.all(emptyFruitFileNames.map(fruitFileName => _loadFruit(fruitFileName))
       .concat([
         /* (async () => {
           const u = `${baseUrl}fruit.glb`;
@@ -75,7 +76,7 @@ export default () => {
     const [
       // eggFruit,
       // lavenderBerry,
-      longApple,
+      // longApple,
       // redShroom,
       // slimeFruit,
       // squidSquash,
@@ -85,7 +86,7 @@ export default () => {
     const fruits = [
       // eggFruit,
       // lavenderBerry,
-      longApple,
+      // longApple,
       // redShroom,
       // slimeFruit,
       // squidSquash,
@@ -116,12 +117,26 @@ export default () => {
     /* activateCb = e => {
       console.log('activate infinifruit', e);
     }; */
+    let loading = false;
     frameCb = (timestamp, timeDiff) => {
       /* // console.log('use frame', timestamp, timeDiff);
       localQuaternion.setFromAxisAngle(localVector.set(0, 0, 1), Math.sin(timestamp / 1000) * 0.1);
       for (const o of os) {
         o.quaternion.copy(localQuaternion);
       } */
+
+      if (subApps.length === 0 && !loading) {
+        (async () => {
+          loading = true;
+
+          const fruitFileName = fruitFileNames[Math.floor(Math.random() * fruitFileNames.length)];
+          const fruit = await _loadFruit(fruitFileName);
+          subApps.push(fruit);
+
+          loading = false;
+        })();
+      }
+
       for (const subApp of subApps) {
         subApp.position.copy(app.position);
         subApp.quaternion.copy(app.quaternion);
@@ -151,6 +166,7 @@ export default () => {
     for (const subApp of subApps) {
       subApp && subApp.activate();
     }
+    subApps.length = 0;
   });
   useFrame(({timestamp, timeDiff}) => {
     frameCb && frameCb(timestamp, timeDiff);
