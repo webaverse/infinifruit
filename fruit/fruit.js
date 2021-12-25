@@ -50,8 +50,15 @@ export default () => {
         console.log('activate', e);
       }; */
       frameCb = (timestamp, timeDiff) => {
+        const s = Math.sin(timestamp / 1000 * 20);
+        const f = Math.min(Math.max(Math.pow(1 + Math.sin(timestamp / 1000 * 5) * 0.5, 8.), 0), 1);
+        const v = 0.3;
         fruit.quaternion.identity()
-          .premultiply(localQuaternion.setFromAxisAngle(localVector.set(0, 0, 1), Math.sin(timestamp / 1000 * 5) * 0.5));
+          .premultiply(
+            localQuaternion.setFromAxisAngle(localVector.set(0, 0, 1),
+              s * f * v
+            )
+          );
         fruit.updateMatrixWorld();
       };
     })();
