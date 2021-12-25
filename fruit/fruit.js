@@ -69,11 +69,15 @@ export default () => {
       };
     })();
     
+    const radius = 0.3;
     const physicsMaterial = new THREE.Vector3(0.5, 0.5, 0);
     app.getWorldPosition(localVector);
+    localVector.y += radius;
     localQuaternion.setFromAxisAngle(localVector2.set(0, 0, 1), Math.PI * 0.5);
     // console.log('call', worldPosition, worldQuaternion, 0.3, 0.1, physicsMaterial);
-    const physicsObject = physics.addCapsuleGeometry(localVector, localQuaternion, 0.3, 0, physicsMaterial);
+    const physicsObject = physics.addCapsuleGeometry(localVector, localQuaternion, radius, 0, physicsMaterial);
+    physics.setLinearLockFlags(physicsObject.physicsId, false, false, false);
+    physics.setAngularLockFlags(physicsObject.physicsId, false, false, false);
     physicsIds.push(physicsObject);
 
     // console.log('fruit physics object', physicsObject.quaternion.toArray());
