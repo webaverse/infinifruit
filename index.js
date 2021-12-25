@@ -117,7 +117,7 @@ export default () => {
     /* activateCb = e => {
       console.log('activate infinifruit', e);
     }; */
-    let loading = false;
+    let loadSpec = null;
     frameCb = (timestamp, timeDiff) => {
       /* // console.log('use frame', timestamp, timeDiff);
       localQuaternion.setFromAxisAngle(localVector.set(0, 0, 1), Math.sin(timestamp / 1000) * 0.1);
@@ -125,22 +125,40 @@ export default () => {
         o.quaternion.copy(localQuaternion);
       } */
 
-      if (subApps.length === 0 && !loading) {
+      if (subApps.length === 0 && !loadSpec) {
         (async () => {
-          loading = true;
+          loadSpec = {
+            startTime: null,
+            endTime: null,
+          };
 
           const fruitFileName = fruitFileNames[Math.floor(Math.random() * fruitFileNames.length)];
           const fruit = await _loadFruit(fruitFileName);
+          loadSpec.startTime = performance.now();
+          loadSpec.endTime = loadSpec.startTime + 1000;
           subApps.push(fruit);
 
-          loading = false;
+          // loadSpec = null;
         })();
       }
 
       for (const subApp of subApps) {
         subApp.position.copy(app.position);
         subApp.quaternion.copy(app.quaternion);
+        if (loadSpec && loadSpec.startTime !== null) {
+          const f = (timestamp - loadSpec.startTime) / (loadSpec.endTime - loadSpec.startTime);
+          if (f < 1) {
+            subApp.scale.setScalar(f);
+          } else {
+            subApp.scale.setScalar(1);
+            loadSpec = null;
+          }
+        } else {
+          subApp.scale.setScalar(1);
+        }
         subApp.updateMatrixWorld();
+        
+        subApp.visible = subApp.scale.x > 0;
       }
     };
   })();
