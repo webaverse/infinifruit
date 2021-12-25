@@ -78,7 +78,7 @@ export default () => {
     
     let frameCb = null;
     useActivate(e => {
-      console.log('activate', e);
+      console.log('activate fruit', e);
     });
     useFrame(({timestamp, timeDiff}) => {
       frameCb && frameCb(timestamp, timeDiff);

@@ -101,7 +101,7 @@ export default () => {
     eggFruit.visible = true; */
     
     activateCb = e => {
-      console.log('activate', e);
+      console.log('activate infinifruit', e);
     };
     frameCb = (timestamp, timeDiff) => {
       /* // console.log('use frame', timestamp, timeDiff);
