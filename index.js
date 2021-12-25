@@ -23,13 +23,24 @@ export default () => {
   const physics = usePhysics();
 
   const _loadFruit = async fileName => {
-    /* const app = await world.addObject(`${baseUrl}fruit/`);
-    return app; */
-    const m = await metaversefile.import(`${baseUrl}fruit/`);
+    const app = await world.appManager.addTrackedApp(
+      `${baseUrl}fruit/`,
+      undefined, // position = new THREE.Vector3(),
+      undefined, // quaternion = new THREE.Quaternion(),
+      undefined, // scale = new THREE.Vector3(1, 1, 1),
+      [
+        {
+          key: 'fileName',
+          value: fileName,
+        },
+      ],
+    );
+    return app;
+    /* const m = await metaversefile.import(`${baseUrl}fruit/`);
     const app = metaversefile.createApp();
     app.setComponent('fileName', fileName);
     await metaversefile.addModule(app, m);
-    return app;
+    return app; */
     // return await metaversefile.load(u);
   };
   const _loadGlb = async fileName => {
@@ -86,7 +97,7 @@ export default () => {
     plant2.scale.multiplyScalar(0.02);
     app.add(plant);
     app.add(plant2);
-    app.add(longApple);
+    // app.add(longApple);
     /* for (const o of os) {
       app.add(o);
     } */
@@ -94,21 +105,28 @@ export default () => {
 
     subApps.push(...fruits);
 
+    // window.fruits = fruits;
+
     /* // visibility
     for (const f of fruits) {
       f.visible = false;
     }
     eggFruit.visible = true; */
     
-    activateCb = e => {
+    /* activateCb = e => {
       console.log('activate infinifruit', e);
-    };
+    }; */
     frameCb = (timestamp, timeDiff) => {
       /* // console.log('use frame', timestamp, timeDiff);
       localQuaternion.setFromAxisAngle(localVector.set(0, 0, 1), Math.sin(timestamp / 1000) * 0.1);
       for (const o of os) {
         o.quaternion.copy(localQuaternion);
       } */
+      for (const subApp of subApps) {
+        subApp.position.copy(app.position);
+        subApp.quaternion.copy(app.quaternion);
+        subApp.updateMatrixWorld();
+      }
     };
   })();
   
@@ -124,10 +142,15 @@ export default () => {
     return result;
   };
 
-  let activateCb = null;
+  // window.infinifruitApp = app;
+
+  // let activateCb = null;
   let frameCb = null;
   useActivate(() => {
-    activateCb && activateCb();
+    // activateCb && activateCb();
+    for (const subApp of subApps) {
+      subApp && subApp.activate();
+    }
   });
   useFrame(({timestamp, timeDiff}) => {
     frameCb && frameCb(timestamp, timeDiff);
