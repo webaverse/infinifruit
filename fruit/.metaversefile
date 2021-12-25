@@ -1,7 +1,25 @@
 {
   "name": "fruit",
   "start_url": "fruit.js",
-  "components": {
-    "activate": true
-  }
+  "components": [
+    {
+      "key": "wear",
+      "value": {
+        "boneAttachment": "leftHand",
+        "position": [-0.05, -0.1, -0.05],
+        "quaternion": [0.7071067811865475, 0, 0, 0.7071067811865476],
+        "scale": [0.3, 0.3, 0.3]
+      }
+    },
+    {
+      "key": "use",
+      "value": {
+        "animation": "drink",
+        "boneAttachment": "leftHand",
+        "position": [-0.05, -0.1, -0.05],
+        "quaternion": [0.7071067811865475, 0, 0, 0.7071067811865476],
+        "scale": [0.3, 0.3, 0.3]
+      }
+    }
+  ]
 }
