@@ -140,6 +140,19 @@ export default () => {
           loadSpec.endTime = loadSpec.startTime + 1000;
           subApps.push(fruit);
 
+          const _clearApps = () => {
+            subApps.splice(subApps.indexOf(fruit), 1);
+
+            fruit.removeEventListener('activate', _clearApps);
+            fruit.removeEventListener('grabupdate', _clearApps);
+          };
+          fruit.addEventListener('activate', _clearApps);
+          fruit.addEventListener('grabupdate', e => {
+            if (e.grab) {
+              _clearApps();
+            }
+          });
+
           // loadSpec = null;
         })();
       }
@@ -169,25 +182,25 @@ export default () => {
   const physicsObject = physics.addCapsuleGeometry(app.position, app.quaternion, 0.3, 0, physicsMaterial);
   physicsIds.push(physicsObject); */
   
-  app.getPhysicsObjects = () => {
+  /* app.getPhysicsObjects = () => {
     const result = [];
     for (const subApp of subApps) {
       result.push(...subApp.getPhysicsObjects());
     }
     return result;
-  };
+  }; */
 
   // window.infinifruitApp = app;
 
   // let activateCb = null;
   let frameCb = null;
-  useActivate(() => {
+  /* useActivate(() => {
     // activateCb && activateCb();
     for (const subApp of subApps) {
       subApp && subApp.activate();
     }
     subApps.length = 0;
-  });
+  }); */
   useFrame(({timestamp, timeDiff}) => {
     frameCb && frameCb(timestamp, timeDiff);
   });
