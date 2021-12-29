@@ -25,6 +25,8 @@ export default () => {
   const app = useApp();
   const physics = usePhysics();
 
+  app.name = 'fruit';
+
   // console.log('got app', app, app.components);
   const fileNameComponent = app.components.find(c => c.key === 'fileName') ;
   const fileName = fileNameComponent?.value;

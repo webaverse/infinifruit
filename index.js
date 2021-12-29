@@ -22,6 +22,8 @@ export default () => {
   const world = useWorld();
   const physics = usePhysics();
 
+  app.name = 'infinifruit';
+
   const _loadFruit = async fileName => {
     const app = await world.appManager.addTrackedApp(
       `${baseUrl}fruit/`,
