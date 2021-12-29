@@ -45,7 +45,7 @@ export default () => {
       const fruit = fruitObject.scene;
       fruit.scale.multiplyScalar(0.2);
       app.add(fruit);
-      app.updateMatrixWorld();
+      fruit.updateMatrixWorld();
       
       /* activateCb = e => {
         console.log('activate', e);
