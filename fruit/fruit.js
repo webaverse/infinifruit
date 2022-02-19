@@ -93,9 +93,7 @@ export default () => {
     let frameCb = null;
     let wearing = false;
     useActivate(e => {
-      // console.log('activate fruit', e);
       app.wear();
-      // XXX need to port wear components out of totum glb handler, so that all apps are supported
     });
     useWear(e => {
       wearing = e.wear;
@@ -104,11 +102,6 @@ export default () => {
     // window.fruitPhysicsObject = physicsObject;
     useFrame(({timestamp, timeDiff}) => {
       frameCb && frameCb(timestamp, timeDiff);
-
-      /* app.getWorldPosition(physicsObject.position);
-      // console.log('set transform', physicsObject.quaternion.toArray());
-      // physicsObject.quaternion.identity();
-      physics.setTransform(physicsObject); */
     });
 
     useCleanup(() => {
