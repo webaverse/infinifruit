@@ -77,7 +77,7 @@ export default () => {
     };
     _getPhysicsTransform(localVector, localQuaternion);
     const physicsMaterial = new THREE.Vector3(0.5, 0.5, 0);
-    const physicsObject = physics.addCapsuleGeometry(localVector, localQuaternion, radius, 0, physicsMaterial);
+    const physicsObject = physics.addCapsuleGeometry(localVector, localQuaternion, radius, 0, physicsMaterial, true);
     physics.setLinearLockFlags(physicsObject.physicsId, false, false, false);
     physics.setAngularLockFlags(physicsObject.physicsId, false, false, false);
     // physics.setMassAndInertia(physicsObject, 0, new THREE.Vector3(0, 0, 0));
