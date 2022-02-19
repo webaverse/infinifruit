@@ -20,7 +20,6 @@ const localQuaternion = new THREE.Quaternion();
 
 // console.log('got fruit init');
 
-
 export default () => {
   const app = useApp();
   const physics = usePhysics();
@@ -34,7 +33,6 @@ export default () => {
   if (fileName) {
     const _loadGlb = async u => {
       let o = await new Promise((accept, reject) => {
-        // console.log('got file name', fileName);
         const {gltfLoader} = useLoaders();
         gltfLoader.load(`${baseUrl}${fileName}`, accept, function onprogress() {}, reject);
       });
