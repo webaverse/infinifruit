@@ -404,7 +404,8 @@ export default () => {
                 dir.y = camera.position.y-localPlayer.position.y;
                 dir.z = camera.position.z-localPlayer.position.z;
                 dir.normalize();
-                
+                if(localPlayer.avatar)
+                  positionsAttribute.setXYZ(i, localPlayer.position.x+dir.x, localPlayer.position.y+dir.y-localPlayer.avatar.height/9, localPlayer.position.z+dir.z);
                 scalesAttribute.setX(i, 0.1);
                 swAttribute.setX(i, 1);
               }
@@ -436,8 +437,12 @@ export default () => {
           crunchMesh.material.uniforms.cameraBillboardQuaternion.value.copy(camera.quaternion);
           //#################################### handle flash #######################################
           for (let i = 0; i < flashParticleCount; i++) {
+              dir.x = camera.position.x-localPlayer.position.x;
+              dir.y = camera.position.y-localPlayer.position.y;
+              dir.z = camera.position.z-localPlayer.position.z;
+              dir.normalize();
               if(localPlayer.avatar)
-                    positionsAttribute.setXYZ(i, localPlayer.position.x+dir.x, localPlayer.position.y+dir.y-localPlayer.avatar.height/9, localPlayer.position.z+dir.z);
+                positionsAttribute.setXYZ(i, localPlayer.position.x+dir.x, localPlayer.position.y+dir.y-localPlayer.avatar.height/9, localPlayer.position.z+dir.z);
               switch (idAttribute.getX(i)) {
                   case 0: {
                       if(circlePlay){
