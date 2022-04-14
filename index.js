@@ -156,7 +156,6 @@ export default () => {
           // loadSpec = null;
         })();
       }
-
       for (const subApp of subApps) {
         subApp.position.copy(app.position);
         subApp.quaternion.copy(app.quaternion);
