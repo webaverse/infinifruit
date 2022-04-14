@@ -46,6 +46,7 @@ export default () => {
   //################################################################### crunch particle ##########################################################################################
     const crunchParticleCount = 21;
     const flashParticleCount = 3;
+    const pixelParticleCount = 15;
     let info = {
         crunchVelocity: [crunchParticleCount]
     }
@@ -97,6 +98,24 @@ export default () => {
     
         return geometry2;
     };
+    const pixelGeometry = new THREE.BufferGeometry()
+    let group = new THREE.Group();
+    {
+      const positions = new Float32Array(pixelParticleCount * 3);
+      for(let i = 0; i < pixelParticleCount * 3; i++)
+        positions[i] = 0;
+      pixelGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+      const opacity = new Float32Array(pixelParticleCount * 1);
+      pixelGeometry.setAttribute('opacity', new THREE.BufferAttribute(opacity, 1));
+
+      const scales = new Float32Array(pixelParticleCount * 1);
+      pixelGeometry.setAttribute('scales', new THREE.BufferAttribute(scales, 1));
+
+    }
+    
+
+
     //##################################################### flash material #####################################################
     const flashMaterial = new THREE.ShaderMaterial({
         uniforms: {
@@ -277,6 +296,61 @@ export default () => {
       //blending: THREE.AdditiveBlending,
       
     });
+    const pixelMaterial = new THREE.ShaderMaterial({
+      vertexShader: `\
+          ${THREE.ShaderChunk.common}
+          ${THREE.ShaderChunk.logdepthbuf_pars_vertex}
+
+          varying vec2 vUv;
+          varying vec3 vPos;
+          varying float vOpacity;
+          varying float vScales;
+          
+          attribute vec3 positions;
+          attribute float opacity;
+          attribute float scales;
+          
+      
+          void main() {
+              vUv=uv;
+              vPos = position;
+              vOpacity = opacity;
+              vScales = scales;
+              vec3 pos = position;
+              
+             
+              vec4 modelPosition = modelMatrix * vec4(position, 1.0);
+              vec4 viewPosition = viewMatrix * modelPosition;
+              vec4 projectionPosition = projectionMatrix * viewPosition;
+          
+              gl_Position = projectionPosition;
+              gl_PointSize = 35.0*scales;
+              vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+              bool isPerspective = ( projectionMatrix[ 2 ][ 3 ] == - 1.0 );
+                  if ( isPerspective ) gl_PointSize *= (1.0 / - viewPosition.z);
+              ${THREE.ShaderChunk.logdepthbuf_vertex}
+          }
+      `,
+      fragmentShader: `\
+          ${THREE.ShaderChunk.logdepthbuf_pars_fragment}
+          
+          varying vec2 vUv;
+          varying vec3 vPos;
+          varying float vOpacity;
+          varying float vScales;
+          void main() {
+              
+              gl_FragColor= vec4(0.0,vScales,0.3,1.0);
+              gl_FragColor.a *= vOpacity;
+              ${THREE.ShaderChunk.logdepthbuf_fragment}
+          }
+      `,
+      side: THREE.DoubleSide,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+      
+    });
     //######################################################## initial instanced mesh #################################################################
     let crunchMesh=null;
     const addInstancedMesh=()=>{
@@ -313,7 +387,8 @@ export default () => {
         idAttribute.needsUpdate = true;
     }
     addInstancedMesh2();
-
+    const pixel = new THREE.Points(pixelGeometry, pixelMaterial);
+    group.add(pixel);
     
 
   //################################################################### fruit ##########################################################################################
@@ -354,8 +429,25 @@ export default () => {
       let particleAlreadyInScene= false;
       let removeFruitFromApp = false;
       let circlePlay = false;
+      let materialStart = false;
       let dir = new THREE.Vector3();
+      let storeMaterial = false;
+      let materials=[];
       frameCb = (timestamp, timeDiff) => {
+        if(localPlayer.avatar && !storeMaterial){
+            if(localPlayer.avatar.app.children[0]){
+                for(let i=0;i<localPlayer.avatar.app.children[0].children.length;i++){
+                    if(localPlayer.avatar.app.children[0].children[i].name==='Face' || localPlayer.avatar.app.children[0].children[i].name==='Bodybaked'){
+                        for(let j=0;j<localPlayer.avatar.app.children[0].children[i].children.length;j++){
+                            if(localPlayer.avatar.app.children[0].children[i].children[j].material[0].constructor.name=='MToonMaterial'){
+                                materials.push(localPlayer.avatar.app.children[0].children[i].children[j].material[0]);
+                            }
+                        }
+                    }
+                }
+                storeMaterial=true;
+            }
+        }
         if (!wearing) {
           const s = Math.sin(timestamp / 1000 * 20);
           const f = Math.min(Math.max(Math.pow(1 + Math.sin(timestamp / 1000 * 5) * 0.5, 8.), 0), 1);
@@ -370,6 +462,7 @@ export default () => {
           if(!particleAlreadyInScene){
             scene.add(crunchMesh);
             scene.add(flashMesh);
+            scene.add(group);
             particleAlreadyInScene=true;
           }
           //######################### crunch attribute ##############################
@@ -383,6 +476,11 @@ export default () => {
           const positionsAttribute = flashMesh.geometry.getAttribute('positions');
           const scalesAttribute = flashMesh.geometry.getAttribute('scales');
           const idAttribute = flashMesh.geometry.getAttribute('id');
+
+          //######################### pixel attribute ##############################
+          const pixelOpacityAttribute = pixel.geometry.getAttribute('opacity');
+          const pixelPositionAttribute = pixel.geometry.getAttribute('position');
+          const pixelScaleAttribute = pixel.geometry.getAttribute('scales');
 
           if (localPlayer.getAction('use')) {
             const v = localPlayer.actionInterpolants.use.get();
@@ -416,6 +514,11 @@ export default () => {
                   positionsAttribute.setXYZ(i, localPlayer.position.x+dir.x, localPlayer.position.y+dir.y-localPlayer.avatar.height/9, localPlayer.position.z+dir.z);
                 scalesAttribute.setX(i, 0.1);
                 swAttribute.setX(i, 1);
+              }
+              for(let i = 0; i < pixelParticleCount; i++){
+                  pixelScaleAttribute.setX(i,0.5+0.5*Math.random());
+                  pixelOpacityAttribute.setX(i,1);
+                  pixelPositionAttribute.setXYZ(i,(Math.random()-0.5)*0.5,-0.5+(Math.random())*-1.5,(Math.random()-0.5)*0.5);
               }
 
               for (const physicsId of physicsIds) {
@@ -460,7 +563,11 @@ export default () => {
                           else{
                               scalesAttribute.setX(i, 0);
                               circlePlay = false;
-                              app.unwear();
+                              // app.unwear();
+                              for(let i=0;i<materials.length;i++){
+                                  materials[i].uniforms.emissionColor.value.g = 0.9;
+                              }
+                              materialStart =true;
                               scene.remove(flashMesh);
                           }
                       }
@@ -516,13 +623,42 @@ export default () => {
           flashMesh.material.uniforms.avatarPos.y=localPlayer.position.y;
           flashMesh.material.uniforms.avatarPos.z=localPlayer.position.z;
 
+          //#################################### handle pixel #######################################
+          for(let i = 0; i < pixelParticleCount; i++){
+              if(pixelOpacityAttribute.getX(i)>0){
+                  pixelScaleAttribute.setX(i,pixelScaleAttribute.getX(i)-0.01);
+                  pixelOpacityAttribute.setX(i,pixelOpacityAttribute.getX(i)-(0.01+Math.random()*0.03));
+                  pixelPositionAttribute.setY(i,pixelPositionAttribute.getY(i)+0.02);
+              }
+                  
+              else
+                  pixelOpacityAttribute.setX(i,0);
+          }
+          pixelOpacityAttribute.needsUpdate = true;
+          pixelPositionAttribute.needsUpdate = true;
+          pixelScaleAttribute.needsUpdate = true;
+          group.position.copy(localPlayer.position);
+
           fruit.position.set(0, 0, 0);
           fruit.quaternion.identity();
           
-          
+          if(materialStart){
+            for(let i=0;i<materials.length;i++){
+                if(materials[i].uniforms.emissionColor.value.g>0)
+                    materials[i].uniforms.emissionColor.value.g -= 0.025;
+                else{
+                  materials[i].uniforms.emissionColor.value.g = 0;
+                  app.unwear();
+                  scene.remove(group);
+                }
+                    
+            }
+          }
         }
         fruit.updateMatrixWorld();
-        //app.updateMatrixWorld();
+        group.updateMatrixWorld();
+        
+        
       };
     })();
     
