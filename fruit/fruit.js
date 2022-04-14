@@ -92,9 +92,9 @@ export default () => {
     
     let frameCb = null;
     let wearing = false;
-    useActivate(e => {
+    /* useActivate(e => {
       app.wear();
-    });
+    }); */
     useWear(e => {
       wearing = e.wear;
     });
