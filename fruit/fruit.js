@@ -106,6 +106,9 @@ export default () => {
             flashTexture:{value: splashTexture12},
             sparkleTexture: { type: 't', value: sparkle },
             circleTexture: { type: 't', value: circle },
+            avatarPos:{
+                value: new THREE.Vector3(0,0,0)
+            },
         },
         vertexShader: `\
             ${THREE.ShaderChunk.common}
@@ -114,6 +117,7 @@ export default () => {
             uniform vec4 cameraBillboardQuaternion;
     
             varying vec2 vUv;
+            varying vec3 vPos;
             varying float vId;
             
             attribute vec3 positions;
@@ -128,7 +132,7 @@ export default () => {
             void main() {
                 vUv=uv;
                 vId=id;
-                
+                vPos = position;
                 vec3 pos = position;
                 if(id>0.5 && id<=1.)
                     pos.y*=0.03;
@@ -150,10 +154,12 @@ export default () => {
             
             varying vec2 vUv;
             varying float vId;
+            varying vec3 vPos;
           
             uniform sampler2D flashTexture;
             uniform sampler2D sparkleTexture;
             uniform sampler2D circleTexture;
+            uniform vec3 avatarPos;
             
             void main() {
                 vec4 flash = texture2D( flashTexture,vUv);
@@ -171,6 +177,8 @@ export default () => {
                     gl_FragColor.rgb *= vec3(0.0376, 0.940, 0.474);
                 else
                     gl_FragColor.rgb *= vec3(0.444, 0.999, 0.777);
+                if(vId<0.2)
+                    gl_FragColor.a *= distance(avatarPos,vPos)*2.;
                 ${THREE.ShaderChunk.logdepthbuf_fragment}
             }
         `,
@@ -447,7 +455,7 @@ export default () => {
                   case 0: {
                       if(circlePlay){
                           if(scalesAttribute.getX(i)<1.5){
-                              scalesAttribute.setX(i, scalesAttribute.getX(i)+0.6);
+                              scalesAttribute.setX(i, scalesAttribute.getX(i)+0.3);
                           }
                           else{
                               scalesAttribute.setX(i, 0);
@@ -504,6 +512,9 @@ export default () => {
           swAttribute.needsUpdate = true;
           scalesAttribute.needsUpdate = true;
           flashMesh.material.uniforms.cameraBillboardQuaternion.value.copy(camera.quaternion);
+          flashMesh.material.uniforms.avatarPos.x=localPlayer.position.x;
+          flashMesh.material.uniforms.avatarPos.y=localPlayer.position.y;
+          flashMesh.material.uniforms.avatarPos.z=localPlayer.position.z;
 
           fruit.position.set(0, 0, 0);
           fruit.quaternion.identity();
