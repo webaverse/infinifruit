@@ -443,6 +443,8 @@ export default () => {
                     if(o.material.constructor.name=='Array'){
                       if (o.material[0].constructor.name=='MToonMaterial') {
                         materials.push(o.material[0]);
+                        if(o.material[0].emissiveMap!==null)
+                          o.material[0].emissiveMap = null;
                       }
                     }
                   }
@@ -568,7 +570,7 @@ export default () => {
                               circlePlay = false;
                               // app.unwear();
                               for(let i=0;i<materials.length;i++){
-                                materials[i].emissiveMap= null;
+                                // materials[i].emissiveMap= null;
                                 materials[i].uniforms.emissionColor.value.r = 0;
                                 materials[i].uniforms.emissionColor.value.g = 0.9;
                                 materials[i].uniforms.emissionColor.value.b = 0;
