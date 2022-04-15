@@ -438,7 +438,6 @@ export default () => {
         //#################### store avatar material ############################
         if(localPlayer.avatar && !storeMaterial){
             if(localPlayer.avatar.app.children[0]){
-              console.log(localPlayer.avatar.app.children[0])
                 localPlayer.avatar.app.children[0].traverse(o => {
                   if(o.isMesh){
                     if(o.material.constructor.name=='Array'){
@@ -449,7 +448,6 @@ export default () => {
                   }
                 });
                 storeMaterial=true;
-              console.log(materials)
             }
         }
         
