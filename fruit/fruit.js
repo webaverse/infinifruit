@@ -429,7 +429,7 @@ export default () => {
       let particleAlreadyInScene= false;
       let removeFruitFromApp = false;
       let circlePlay = false;
-      let materialStart = false;
+      let materialStartTime = -1;
       let dir = new THREE.Vector3();
       let storeMaterial = false;
       let materials=[];
@@ -438,6 +438,7 @@ export default () => {
         //#################### store avatar material ############################
         if(localPlayer.avatar && !storeMaterial){
             if(localPlayer.avatar.app.children[0]){
+              console.log(localPlayer.avatar.app.children[0])
                 localPlayer.avatar.app.children[0].traverse(o => {
                   if(o.isMesh){
                     if(o.material.constructor.name=='Array'){
@@ -448,6 +449,7 @@ export default () => {
                   }
                 });
                 storeMaterial=true;
+              console.log(materials)
             }
         }
         
@@ -568,9 +570,12 @@ export default () => {
                               circlePlay = false;
                               // app.unwear();
                               for(let i=0;i<materials.length;i++){
-                                  materials[i].uniforms.emissionColor.value.g = 0.9;
+                                materials[i].emissiveMap= null;
+                                materials[i].uniforms.emissionColor.value.r = 0;
+                                materials[i].uniforms.emissionColor.value.g = 0.9;
+                                materials[i].uniforms.emissionColor.value.b = 0;
                               }
-                              materialStart =true;
+                              materialStartTime = timestamp;
                               scene.remove(flashMesh);
                           }
                       }
@@ -645,17 +650,22 @@ export default () => {
           fruit.position.set(0, 0, 0);
           fruit.quaternion.identity();
           
-          if(materialStart){
+          if(materialStartTime>0){
+            if(timestamp-materialStartTime>800){
+              for(let i=0;i<materials.length;i++)
+                materials[i].uniforms.emissionColor.value.g = 0;
+              app.unwear();
+              scene.remove(group);
+            }
             for(let i=0;i<materials.length;i++){
                 if(materials[i].uniforms.emissionColor.value.g>0)
                     materials[i].uniforms.emissionColor.value.g -= 0.025;
                 else{
                   materials[i].uniforms.emissionColor.value.g = 0;
-                  app.unwear();
-                  scene.remove(group);
                 }
                     
             }
+            
           }
         }
         fruit.updateMatrixWorld();
@@ -688,9 +698,9 @@ export default () => {
     
     let frameCb = null;
     let wearing = false;
-    /* useActivate(e => {
-      app.wear();
-    }); */
+    // useActivate(e => {
+    //   app.wear();
+    // });
     useWear(e => {
       wearing = e.wear;
     });
