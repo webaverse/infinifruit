@@ -43,7 +43,7 @@ export default () => {
   const fileNameComponent = app.components.find(c => c.key === 'fileName') ;
   const fileName = fileNameComponent?.value;
   if (fileName) {
-  //################################################################### crunch particle ##########################################################################################
+  //################################################################### particle ##########################################################################################
     const crunchParticleCount = 21;
     const flashParticleCount = 3;
     const pixelParticleCount = 15;
@@ -434,20 +434,23 @@ export default () => {
       let storeMaterial = false;
       let materials=[];
       frameCb = (timestamp, timeDiff) => {
+
+        //#################### store avatar material ############################
         if(localPlayer.avatar && !storeMaterial){
             if(localPlayer.avatar.app.children[0]){
-                for(let i=0;i<localPlayer.avatar.app.children[0].children.length;i++){
-                    if(localPlayer.avatar.app.children[0].children[i].name==='Face' || localPlayer.avatar.app.children[0].children[i].name==='Bodybaked'){
-                        for(let j=0;j<localPlayer.avatar.app.children[0].children[i].children.length;j++){
-                            if(localPlayer.avatar.app.children[0].children[i].children[j].material[0].constructor.name=='MToonMaterial'){
-                                materials.push(localPlayer.avatar.app.children[0].children[i].children[j].material[0]);
-                            }
-                        }
+                localPlayer.avatar.app.children[0].traverse(o => {
+                  if(o.isMesh){
+                    if(o.material.constructor.name=='Array'){
+                      if (o.material[0].constructor.name=='MToonMaterial') {
+                        materials.push(o.material[0]);
+                      }
                     }
-                }
+                  }
+                });
                 storeMaterial=true;
             }
         }
+        
         if (!wearing) {
           const s = Math.sin(timestamp / 1000 * 20);
           const f = Math.min(Math.max(Math.pow(1 + Math.sin(timestamp / 1000 * 5) * 0.5, 8.), 0), 1);
