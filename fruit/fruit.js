@@ -46,7 +46,7 @@ export default () => {
   //################################################################### particle ##########################################################################################
     const crunchParticleCount = 21;
     const flashParticleCount = 3;
-    const pixelParticleCount = 15;
+    const pixelParticleCount = 20;
     let info = {
         crunchVelocity: [crunchParticleCount]
     }
@@ -443,6 +443,9 @@ export default () => {
                     if(o.material.constructor.name=='Array'){
                       if (o.material[0].constructor.name=='MToonMaterial') {
                         materials.push(o.material[0]);
+                        o.material[0].uniforms.emissionColor.value.r = 0;
+                        o.material[0].uniforms.emissionColor.value.g = 0;
+                        o.material[0].uniforms.emissionColor.value.b = 0;
                         if(o.material[0].emissiveMap!==null)
                           o.material[0].emissiveMap = null;
                       }
@@ -451,7 +454,9 @@ export default () => {
                 });
                 storeMaterial=true;
             }
+            
         }
+        
         
         if (!wearing) {
           const s = Math.sin(timestamp / 1000 * 20);
