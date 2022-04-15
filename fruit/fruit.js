@@ -46,7 +46,7 @@ export default () => {
   //################################################################### particle ##########################################################################################
     const crunchParticleCount = 21;
     const flashParticleCount = 3;
-    const pixelParticleCount = 20;
+    const pixelParticleCount = 15;
     let info = {
         crunchVelocity: [crunchParticleCount]
     }
