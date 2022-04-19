@@ -442,12 +442,10 @@ export default () => {
                   if(o.isMesh){
                     if(o.material.constructor.name=='Array'){
                       if (o.material[0].constructor.name=='MToonMaterial') {
-                        materials.push(o.material[0]);
-                        o.material[0].uniforms.emissionColor.value.r = 0;
-                        o.material[0].uniforms.emissionColor.value.g = 0;
-                        o.material[0].uniforms.emissionColor.value.b = 0;
-                        if(o.material[0].emissiveMap!==null)
-                          o.material[0].emissiveMap = null;
+                        materials.push(o.material[0].uniforms.color.value);
+                      }
+                      else{
+                        materials.push(o.material[0].color);
                       }
                     }
                   }
@@ -576,9 +574,9 @@ export default () => {
                               // app.unwear();
                               for(let i=0;i<materials.length;i++){
                                 // materials[i].emissiveMap= null;
-                                materials[i].uniforms.emissionColor.value.r = 0;
-                                materials[i].uniforms.emissionColor.value.g = 0.9;
-                                materials[i].uniforms.emissionColor.value.b = 0;
+                                materials[i].r = 0.;
+                                materials[i].g = 2;
+                                materials[i].b = 0.;
                               }
                               materialStartTime = timestamp;
                               scene.remove(flashMesh);
@@ -657,16 +655,24 @@ export default () => {
           
           if(materialStartTime>0){
             if(timestamp-materialStartTime>800){
-              for(let i=0;i<materials.length;i++)
-                materials[i].uniforms.emissionColor.value.g = 0;
+              for(let i=0;i<materials.length;i++){
+                materials[i].r = 1;
+                materials[i].g = 1;
+                materials[i].b = 1;
+              }
               app.unwear();
               scene.remove(group);
             }
             for(let i=0;i<materials.length;i++){
-                if(materials[i].uniforms.emissionColor.value.g>0)
-                    materials[i].uniforms.emissionColor.value.g -= 0.025;
+                if(materials[i].r<1){
+                  materials[i].r += 0.02;
+                  materials[i].g -= 0.02;
+                  materials[i].b += 0.02;
+                }
                 else{
-                  materials[i].uniforms.emissionColor.value.g = 0;
+                  materials[i].r = 1;
+                  materials[i].g = 1;
+                  materials[i].b = 1;
                 }
                     
             }
