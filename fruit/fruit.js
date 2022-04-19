@@ -528,6 +528,12 @@ export default () => {
                   pixelOpacityAttribute.setX(i,1);
                   pixelPositionAttribute.setXYZ(i,(Math.random()-0.5)*0.5,-0.5+(Math.random())*-1.5,(Math.random()-0.5)*0.5);
               }
+              for(let i=0;i<materials.length;i++){
+                // materials[i].emissiveMap= null;
+                materials[i].r = 0.;
+                materials[i].g = 2;
+                materials[i].b = 0.;
+              }
 
               for (const physicsId of physicsIds) {
                 physics.removeGeometry(physicsId);
@@ -572,12 +578,12 @@ export default () => {
                               scalesAttribute.setX(i, 0);
                               circlePlay = false;
                               // app.unwear();
-                              for(let i=0;i<materials.length;i++){
-                                // materials[i].emissiveMap= null;
-                                materials[i].r = 0.;
-                                materials[i].g = 2;
-                                materials[i].b = 0.;
-                              }
+                              // for(let i=0;i<materials.length;i++){
+                              //   // materials[i].emissiveMap= null;
+                              //   materials[i].r = 0.;
+                              //   materials[i].g = 2;
+                              //   materials[i].b = 0.;
+                              // }
                               materialStartTime = timestamp;
                               scene.remove(flashMesh);
                           }
