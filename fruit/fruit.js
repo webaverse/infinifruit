@@ -13,7 +13,7 @@ const textureLoader = new THREE.TextureLoader();
 const simpleNoise2 = textureLoader.load(`${baseUrl}/textures/splash3.jpg`);
 const sphere = textureLoader.load(`${baseUrl}/textures/sphere.jpg`);
 const sparkle = textureLoader.load(`${baseUrl}/textures/sparkle.png`);
-const circle = textureLoader.load(`${baseUrl}/textures/circle18.png`);
+const circle = textureLoader.load(`${baseUrl}/textures/Circle18.png`);
 const splashTexture12 = textureLoader.load(`${baseUrl}/textures/splash12.png`);
 
 /* const fruitFileNames = [
@@ -46,7 +46,7 @@ export default () => {
   //################################################################### particle ##########################################################################################
     const crunchParticleCount = 21;
     const flashParticleCount = 3;
-    const pixelParticleCount = 20;
+    const pixelParticleCount = 15;
     let info = {
         crunchVelocity: [crunchParticleCount]
     }
