@@ -13,7 +13,7 @@ const textureLoader = new THREE.TextureLoader();
 const simpleNoise2 = textureLoader.load(`${baseUrl}/textures/splash3.jpg`);
 const sphere = textureLoader.load(`${baseUrl}/textures/sphere.jpg`);
 const sparkle = textureLoader.load(`${baseUrl}/textures/sparkle.png`);
-const circle = textureLoader.load(`${baseUrl}/textures/Circle18.png`);
+const circle = textureLoader.load(`${baseUrl}/textures/circle18.png`);
 const splashTexture12 = textureLoader.load(`${baseUrl}/textures/splash12.png`);
 
 /* const fruitFileNames = [
@@ -46,7 +46,7 @@ export default () => {
   //################################################################### particle ##########################################################################################
     const crunchParticleCount = 21;
     const flashParticleCount = 3;
-    const pixelParticleCount = 15;
+    const pixelParticleCount = 20;
     let info = {
         crunchVelocity: [crunchParticleCount]
     }
@@ -264,7 +264,7 @@ export default () => {
           #define PI 3.1415926
 
           void main() {
-            vec4 mask = texture2D(sphere,vUv);
+            vec4 mask = texture2D(sphere,vUv*2.5);
             float mid = 0.5;
             vec2 rotated = vec2(cos(vRandom*PI) * (vUv.x - mid) + sin(vRandom*PI) * (vUv.y - mid) + mid,
                                 cos(vRandom*PI) * (vUv.y - mid) - sin(vRandom*PI) * (vUv.x - mid) + mid);
