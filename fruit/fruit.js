@@ -666,8 +666,8 @@ export default () => {
                 materials[i].g = 1;
                 materials[i].b = 1;
               }
-              app.unwear();
               scene.remove(group);
+              app.unwear();
             }
             for(let i=0;i<materials.length;i++){
                 if(materials[i].r<1){
@@ -679,6 +679,8 @@ export default () => {
                   materials[i].r = 1;
                   materials[i].g = 1;
                   materials[i].b = 1;
+                  scene.remove(group);
+                  app.unwear();
                 }
                     
             }
