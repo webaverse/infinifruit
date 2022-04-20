@@ -442,10 +442,10 @@ export default () => {
                   if(o.isMesh){
                     if(o.material.constructor.name=='Array'){
                       if (o.material[0].constructor.name=='MToonMaterial') {
-                        materials.push(o.material[0].uniforms.color.value);
+                        materials.push(o.material[0].uniforms.rimColor.value);
                       }
                       else{
-                        materials.push(o.material[0].color);
+                        materials.push(o.material[0].emissive);
                       }
                     }
                   }
@@ -531,10 +531,9 @@ export default () => {
               for(let i=0;i<materials.length;i++){
                 // materials[i].emissiveMap= null;
                 materials[i].r = 0.;
-                materials[i].g = 2;
+                materials[i].g = 70.;
                 materials[i].b = 0.;
               }
-
               for (const physicsId of physicsIds) {
                 physics.removeGeometry(physicsId);
               }
@@ -578,12 +577,12 @@ export default () => {
                               scalesAttribute.setX(i, 0);
                               circlePlay = false;
                               // app.unwear();
-                              // for(let i=0;i<materials.length;i++){
-                              //   // materials[i].emissiveMap= null;
-                              //   materials[i].r = 0.;
-                              //   materials[i].g = 2;
-                              //   materials[i].b = 0.;
-                              // }
+                              for(let i=0;i<materials.length;i++){
+                                // materials[i].emissiveMap= null;
+                                materials[i].r = 0.;
+                                materials[i].g = 1.;
+                                materials[i].b = 0.;
+                              }
                               materialStartTime = timestamp;
                               scene.remove(flashMesh);
                           }
@@ -660,25 +659,25 @@ export default () => {
           fruit.quaternion.identity();
           
           if(materialStartTime>0){
-            if(timestamp-materialStartTime>800){
-              for(let i=0;i<materials.length;i++){
-                materials[i].r = 1;
-                materials[i].g = 1;
-                materials[i].b = 1;
-              }
-              scene.remove(group);
-              app.unwear();
-            }
+            // if(timestamp-materialStartTime>800){
+            //   for(let i=0;i<materials.length;i++){
+            //     materials[i].r = 0;
+            //     materials[i].g = 0;
+            //     materials[i].b = 0;
+            //   }
+            //   scene.remove(group);
+            //   app.unwear();
+            // }
             for(let i=0;i<materials.length;i++){
-                if(materials[i].r<1){
-                  materials[i].r += 0.02;
+                if(materials[i].g>0){
+                  // materials[i].r += 0.02;
                   materials[i].g -= 0.02;
-                  materials[i].b += 0.02;
+                  // materials[i].b += 0.02;
                 }
                 else{
-                  materials[i].r = 1;
-                  materials[i].g = 1;
-                  materials[i].b = 1;
+                  materials[i].r = 0;
+                  materials[i].g = 0;
+                  materials[i].b = 0;
                   scene.remove(group);
                   app.unwear();
                 }
