@@ -177,30 +177,8 @@ export default () => {
       }
     };
   })();
-  
-  /* const physicsMaterial = new THREE.Vector3(0.5, 0.5, 0);
-  const physicsObject = physics.addCapsuleGeometry(app.position, app.quaternion, 0.3, 0, physicsMaterial);
-  physicsIds.push(physicsObject); */
-  
-  /* app.getPhysicsObjects = () => {
-    const result = [];
-    for (const subApp of subApps) {
-      result.push(...subApp.getPhysicsObjects());
-    }
-    return result;
-  }; */
 
-  // window.infinifruitApp = app;
-
-  // let activateCb = null;
   let frameCb = null;
-  /* useActivate(() => {
-    // activateCb && activateCb();
-    for (const subApp of subApps) {
-      subApp && subApp.activate();
-    }
-    subApps.length = 0;
-  }); */
   useFrame(({timestamp, timeDiff}) => {
     frameCb && frameCb(timestamp, timeDiff);
   });
