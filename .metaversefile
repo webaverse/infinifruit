@@ -1,5 +1,6 @@
 {
   "name": "infinifruit",
+  "description": "A magical fruit with healing power",
   "start_url": "index.js",
   "components": []
 }
