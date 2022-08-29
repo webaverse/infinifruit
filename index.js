@@ -9,12 +9,12 @@ const localVector = new THREE.Vector3();
 const localQuaternion = new THREE.Quaternion();
 
 const fruitFileNames = [
-  'Egg_Fruit_dream.glb',
-  'Lavender_Berry_dream.glb',
-  'Long_Apple_dream.glb',
+  'borgorfruit.glb',
+  'borgorfruit.glb',
+  'borgorfruit.glb',
   'Red_Shroom_dream.glb',
-  'Slime_Fruit_dream.glb',
-  'Squid_Squash_dream.glb',
+  'borgorfruit.glb',
+  'borgorfruit.glb',
 ];
 
 export default () => {
