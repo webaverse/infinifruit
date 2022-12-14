@@ -242,7 +242,8 @@ export default () => {
           const splashDegree = fruit.scale.x / 0.2;
 
           if (localPlayer.getAction('use')) {
-            const v = localPlayer.actionInterpolants.use.get();
+            // const v = localPlayer.actionInterpolants.use.get();
+            const v = physics.getActionInterpolant(localPlayer, 'use', 0);
             const eatFrameIndex = _getActionFrameIndex(v, eatFrameIndices);
             if (eatFrameIndex !== 0 && eatFrameIndex !== lastEatFrameIndex) {
               for (let i = (eatFrameIndex-1)*7; i < (eatFrameIndex-1)*7+7; i++) {
