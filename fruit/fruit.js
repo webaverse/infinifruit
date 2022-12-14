@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 // import easing from './easing.js';
 import metaversefile from 'metaversefile';
-const {useApp, useFrame, useActivate, useWear, useLoaders, usePhysics, useCleanup, useLocalPlayer, useScene, useInternals} = metaversefile;
+const {useApp, useFrame, useActivate, useWear, useLoaders, usePhysics, useCleanup, useLocalPlayer, useScene, useInternals, useConstants} = metaversefile;
+const {GET} = useConstants();
 
 const baseUrl = import.meta.url.replace(/(\/)[^\/\\]*$/, '$1');
 
@@ -243,7 +244,7 @@ export default () => {
 
           if (localPlayer.getAction('use')) {
             // const v = localPlayer.actionInterpolants.use.get();
-            const v = physics.getActionInterpolant(localPlayer, 'use', 0);
+            const v = physics.getActionInterpolant(localPlayer, 'use', GET);
             const eatFrameIndex = _getActionFrameIndex(v, eatFrameIndices);
             if (eatFrameIndex !== 0 && eatFrameIndex !== lastEatFrameIndex) {
               for (let i = (eatFrameIndex-1)*7; i < (eatFrameIndex-1)*7+7; i++) {
