@@ -1,8 +1,7 @@
 import * as THREE from 'three';
 // import easing from './easing.js';
 import metaversefile from 'metaversefile';
-const {useApp, useFrame, useActivate, useWear, useLoaders, usePhysics, useCleanup, useLocalPlayer, useScene, useInternals, useConstants} = metaversefile;
-const {GET} = useConstants();
+const {useApp, useFrame, useActivate, useWear, useLoaders, usePhysics, useCleanup, useLocalPlayer, useScene, useInternals} = metaversefile;
 
 const baseUrl = import.meta.url.replace(/(\/)[^\/\\]*$/, '$1');
 
@@ -14,6 +13,12 @@ const textureLoader = new THREE.TextureLoader();
 const simpleNoise2 = textureLoader.load(`${baseUrl}/textures/splash3.jpg`);
 const sphere = textureLoader.load(`${baseUrl}/textures/sphere.jpg`);
 
+
+// note: For WASM API.
+export const GET = 0;
+export const GET_NORMALIZED = 1;
+export const GET_INVERSE = 2;
+//
 
 /* const fruitFileNames = [
   'Egg_Fruit_dream.glb',
