@@ -14,6 +14,12 @@ const simpleNoise2 = textureLoader.load(`${baseUrl}/textures/splash3.jpg`);
 const sphere = textureLoader.load(`${baseUrl}/textures/sphere.jpg`);
 
 
+// note: For WASM API.
+export const GET = 0;
+export const GET_NORMALIZED = 1;
+export const GET_INVERSE = 2;
+//
+
 /* const fruitFileNames = [
   'Egg_Fruit_dream.glb',
   'Lavender_Berry_dream.glb',
@@ -242,7 +248,8 @@ export default () => {
           const splashDegree = fruit.scale.x / 0.2;
 
           if (localPlayer.getAction('use')) {
-            const v = localPlayer.actionInterpolants.use.get();
+            // const v = localPlayer.actionInterpolants.use.get();
+            const v = physics.getActionInterpolant(localPlayer, 'use', GET);
             const eatFrameIndex = _getActionFrameIndex(v, eatFrameIndices);
             if (eatFrameIndex !== 0 && eatFrameIndex !== lastEatFrameIndex) {
               for (let i = (eatFrameIndex-1)*7; i < (eatFrameIndex-1)*7+7; i++) {
