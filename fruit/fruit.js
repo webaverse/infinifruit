@@ -41,7 +41,7 @@ export default () => {
 
 
 
-  app.name = 'fruit';
+  app.name = 'borgor';
 
   // console.log('got app', app, app.components);
   const fileNameComponent = app.components.find(c => c.key === 'fileName') ;
