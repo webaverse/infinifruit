@@ -10,8 +10,8 @@ const localVector2 = new THREE.Vector3();
 const localQuaternion = new THREE.Quaternion();
 
 const textureLoader = new THREE.TextureLoader();
-const simpleNoise2 = textureLoader.load(`${baseUrl}/textures/splash3.jpg`);
-const sphere = textureLoader.load(`${baseUrl}/textures/sphere.jpg`);
+const simpleNoise2 = textureLoader.load(`${baseUrl}textures/splash3.jpg`);
+const sphere = textureLoader.load(`${baseUrl}textures/sphere.jpg`);
 
 
 // note: For WASM API.
@@ -38,7 +38,6 @@ export default () => {
   const {camera} = useInternals();
   const physics = usePhysics();
   const localPlayer = useLocalPlayer();
-
 
 
   app.name = 'fruit';
@@ -247,7 +246,8 @@ export default () => {
           const splashRandomAttribute = crunchMesh.geometry.getAttribute('random');
           const splashDegree = fruit.scale.x / 0.2;
 
-          if (localPlayer.getAction('use')) {
+          const hasUse = !!localPlayer.getAction('use');
+          if (hasUse && localPlayer.getAction('use').instanceId === app.instanceId) {
             // const v = localPlayer.actionInterpolants.use.get();
             const v = physics.getActionInterpolant(localPlayer, 'use', GET);
             const eatFrameIndex = _getActionFrameIndex(v, eatFrameIndices);
