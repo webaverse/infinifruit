@@ -264,11 +264,8 @@ export default () => {
                   splashPositionsAttribute.setXYZ(i, app.position.x+(Math.random()-0.5)*0.02,app.position.y+(0.13* splashDegree)+(Math.random())*0.02,app.position.z+(Math.random()-0.5)*0.02);
                   splashRandomAttribute.setX(i, Math.random());
               }
-              //if(eatFrameIndex===3){
-                fruit.scale.x/=1.3;
-                fruit.scale.y/=1.3;
-                fruit.scale.z/=1.3;
-              //}
+              const scale = 0.2 / Math.pow(1.3, eatFrameIndex)
+              fruit.scale.set(scale, scale, scale);
             }
             if(fruit.scale.x<=0.1 && !removeFruitFromApp){
               scene.remove(crunchMesh);
